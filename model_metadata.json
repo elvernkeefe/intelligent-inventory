@@ -1,0 +1,67 @@
+{
+  "model_type": "Optimized CatBoost",
+  "test_r2": 0.6484391361655424,
+  "test_mae": 142.58190346267662,
+  "test_rmse": 188.22859765286017,
+  "overfitting_gap": 0.04378837591537721,
+  "training_date": "2025-12-19 09:26:07",
+  "num_features": 20,
+  "feature_names": [
+    "Demand Forecast",
+    "InventoryQuant",
+    "Promotion",
+    "Price_Promo_Interaction",
+    "Discount_Promo_Interaction",
+    "Discount",
+    "Rolling_Sold_std_4w",
+    "Forecast_vs_Actual",
+    "Price_vs_Competitor",
+    "Price",
+    "Rolling_Sold_4w",
+    "Lagged_Sold_4w",
+    "Sales_Velocity",
+    "Lagged_Sold_2w",
+    "Stock_Coverage_Weeks",
+    "Competitor Pricing",
+    "Lagged_Sold_1w",
+    "Week_Cos",
+    "Week_Sin",
+    "Week_of_Year"
+  ],
+  "target_variable": "units_ordered",
+  "model_purpose": "Weekly inventory order quantity prediction for North Region",
+  "input_requirements": {
+    "date_range": "Weekly aggregated data",
+    "grouping": "Store x Category",
+    "required_columns": [
+      "Store",
+      "product_category",
+      "InventoryQuant",
+      "Demand Forecast",
+      "Price",
+      "Discount",
+      "Promotion",
+      "Competitor Pricing",
+      "Weather",
+      "Month",
+      "Quarter",
+      "Week_of_Year"
+    ],
+    "engineered_features": [
+      "Lagged_Sold_1w",
+      "Lagged_Sold_2w",
+      "Lagged_Sold_4w",
+      "Rolling_Sold_4w",
+      "Rolling_Sold_std_4w",
+      "Stock_Coverage_Weeks",
+      "Sales_Velocity",
+      "Forecast_vs_Actual",
+      "Price_vs_Competitor"
+    ]
+  },
+  "usage_notes": {
+    "prediction_workflow": "Load current inventory \u2192 Engineer features \u2192 Scale \u2192 Predict",
+    "output": "Recommended order quantity (units_ordered)",
+    "confidence": "Use RMSE for prediction intervals"
+  }
+}

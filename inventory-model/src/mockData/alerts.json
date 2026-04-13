@@ -1,0 +1,46 @@
+{
+  "critical": [
+    {
+      "id": 1,
+      "type": "stockout",
+      "store": "Store B",
+      "category": "Groceries",
+      "message": "Stockout risk in 3 days",
+      "details": {
+        "currentInventory": 89,
+        "dailySales": 32,
+        "recommendedOrder": 450
+      }
+    },
+    {
+      "id": 2,
+      "type": "accuracy",
+      "store": "Store E",
+      "category": "Electronics",
+      "message": "12% forecast error spike"
+    },
+    {
+      "id": 3,
+      "type": "overstock",
+      "store": "Store C",
+      "category": "Clothing",
+      "message": "Overstock detected (18 weeks coverage)"
+    }
+  ],
+  "warnings": [
+    {
+      "id": 4,
+      "type": "promotion",
+      "store": "Store A",
+      "category": "Toys",
+      "message": "Promotion starting Friday (demand spike +35%)"
+    },
+    {
+      "id": 5,
+      "type": "velocity",
+      "store": "Store D",
+      "category": "Groceries",
+      "message": "Sales velocity increased 18% this week"
+    }
+  ]
+}

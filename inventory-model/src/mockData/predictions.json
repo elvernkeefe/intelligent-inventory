@@ -1,0 +1,54 @@
+{
+  "predictions": [
+    {
+      "id": 1,
+      "store": "Store A",
+      "category": "Electronics",
+      "currentInventory": 450,
+      "predictedOrder": 523,
+      "confidence": 0.92,
+      "riskLevel": "low",
+      "action": "auto-order"
+    },
+    {
+      "id": 2,
+      "store": "Store B",
+      "category": "Groceries",
+      "currentInventory": 89,
+      "predictedOrder": 450,
+      "confidence": 0.88,
+      "riskLevel": "high",
+      "action": "review"
+    },
+    {
+      "id": 3,
+      "store": "Store C",
+      "category": "Furniture",
+      "currentInventory": 234,
+      "predictedOrder": 0,
+      "confidence": 0.95,
+      "riskLevel": "low",
+      "action": "hold"
+    },
+    {
+      "id": 4,
+      "store": "Store D",
+      "category": "Toys",
+      "currentInventory": 156,
+      "predictedOrder": 235,
+      "confidence": 0.91,
+      "riskLevel": "low",
+      "action": "auto-order"
+    },
+    {
+      "id": 5,
+      "store": "Store E",
+      "category": "Clothing",
+      "currentInventory": 567,
+      "predictedOrder": 123,
+      "confidence": 0.76,
+      "riskLevel": "warning",
+      "action": "review"
+    }
+  ]
+}
