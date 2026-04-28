@@ -534,30 +534,62 @@ async def get_simulation_parameters(
         Product.delivery_cycle_days
     ).all()
     
-    # Get latest inventory per store-category combination (not global latest date)
-    latest_inventory = {}
-    for row in results:
-        latest_record = db.query(InventoryHistory).join(
-            Store, InventoryHistory.store_id == Store.id
-        ).join(
-            Product, InventoryHistory.product_id == Product.id
-        ).filter(
-            Store.store_name == row.store_name,
-            Product.category_name == row.category_name
-        ).order_by(InventoryHistory.date.desc()).first()
+    # Get latest inventory per store-category combination.
+    # NOTE: Avoid N+1 queries (one DB query per lane). In AnyLogic Cloud this
+    # can easily time out due to added network latency.
+    latest_subq = db.query(
+        InventoryHistory.store_id.label("store_id"),
+        InventoryHistory.product_id.label("product_id"),
+        func.max(InventoryHistory.date).label("max_date"),
+    )
 
-        if latest_record:
-            key = f"{row.store_name}_{row.category_name}"
-            latest_inventory[key] = {
-                'current_inventory': float(latest_record.inventory_quantity),
-                'current_demand_forecast': float(latest_record.demand_forecast)
-            }
+    # Apply the same filters to keep the latest-inventory scan small.
+    if store or category:
+        latest_subq = latest_subq.join(Store, Store.id == InventoryHistory.store_id).join(
+            Product, Product.id == InventoryHistory.product_id
+        )
+        if store:
+            latest_subq = latest_subq.filter(Store.store_name == store)
+        if category:
+            latest_subq = latest_subq.filter(Product.category_name == category)
+
+    latest_subq = latest_subq.group_by(InventoryHistory.store_id, InventoryHistory.product_id).subquery()
+
+    current_rows = db.query(
+        Store.store_name.label("store_name"),
+        Product.category_name.label("category_name"),
+        InventoryHistory.inventory_quantity.label("inventory_quantity"),
+        InventoryHistory.demand_forecast.label("demand_forecast"),
+    ).join(
+        latest_subq,
+        and_(
+            InventoryHistory.store_id == latest_subq.c.store_id,
+            InventoryHistory.product_id == latest_subq.c.product_id,
+            InventoryHistory.date == latest_subq.c.max_date,
+        ),
+    ).join(
+        Store, Store.id == InventoryHistory.store_id
+    ).join(
+        Product, Product.id == InventoryHistory.product_id
+    )
+
+    if store:
+        current_rows = current_rows.filter(Store.store_name == store)
+    if category:
+        current_rows = current_rows.filter(Product.category_name == category)
+
+    latest_inventory = {
+        (r.store_name, r.category_name): {
+            'current_inventory': float(r.inventory_quantity),
+            'current_demand_forecast': float(r.demand_forecast),
+        }
+        for r in current_rows.all()
+    }
     
     # Format results for AnyLogic
     parameters = []
     for row in results:
-        key = f"{row.store_name}_{row.category_name}"
-        current_inv = latest_inventory.get(key, {})
+        current_inv = latest_inventory.get((row.store_name, row.category_name), {})
         
         parameters.append({
             'store': row.store_name,
