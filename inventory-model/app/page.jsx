@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import AnyLogicSimulation from "../components/AnyLogicSimulation"
 import Dashboard from "../components/Dashboard"
 import InventoryHealth from "../components/InventoryHealth"
 import InventoryHistory from "../components/InventoryHistory"
@@ -19,7 +18,6 @@ export default function Home() {
     { id: "orders", label: "Orders", icon: "🚚" },
     { id: "shipments", label: "Shipments", icon: "📤" },
     { id: "simulation-list", label: "Simulation List", icon: "🧪" },
-    { id: "simulation", label: "Simulation", icon: "🖥️" },
     { id: "history", label: "History", icon: "📜" },
     { id: "inventory", label: "Inventory", icon: "💹" },
   ]
@@ -79,7 +77,6 @@ export default function Home() {
         {activeTab === "orders" && <Orders />}
         {activeTab === "shipments" && <Shipments />}
         {activeTab === "simulation-list" && <SimulationList />}
-        {activeTab === "simulation" && <AnyLogicSimulation />}
         {activeTab === "history" && <InventoryHistory />}
         {activeTab === "inventory" && <InventoryHealth />}
       </main>
